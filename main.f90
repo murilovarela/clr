@@ -19,7 +19,7 @@ program main
       k0 = 480.0              !mol1-n m3n-2 s-1
       e = 95116.4             !J/mol
       r = 8.314462            !J K−1 mol−1
-      t = 5.0                !s
+      t = 5.0                 !s
       rg = 1.4e-6             !m
       b = 4.0                 !mol/mol
       vm = 12.4e-6            !m3/mol

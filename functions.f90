@@ -1,8 +1,8 @@
 !equation list file
 !by Murilo Varela
 real*8 function f1_1 (t, ti)
-      !t: time
-      !ti: residence time
+      !t: time (s)
+      !ti: residence time (s)
 
       implicit none
 
@@ -13,12 +13,12 @@ real*8 function f1_1 (t, ti)
 end function f1_1
 
 real*8 function f1_2 (rg, b, vm, k, c, n)
-      !rg: grains radius of metalic copper
-      !b: stoichiometric coefficient
-      !vm: molar volume of CuO
+      !rg: grains radius of metalic copper (mu m)
+      !b: stoichiometric coefficient (mol CuO / mol gas)
+      !vm: molar volume of CuO (cm3//mol)
       !k: constant in arrhenius form (function f2)
       !c: concentration (vol%)
-      !n: reaction order
+      !n: reaction order (-)
 
       implicit none
 
@@ -28,10 +28,10 @@ real*8 function f1_2 (rg, b, vm, k, c, n)
 end function f1_2
 
 real*8 function f2 (k0, e, r, temp)
-      !k0: pre exponential factor
-      !e: activation energy
-      !r: constant for ideal gases
-      !t: temperature
+      !k0: pre exponential factor (...)
+      !e: activation energy (j/mol)
+      !r: constant for ideal gases (j k−1 mol−1)
+      !t: temperature (k)
 
       implicit none
 
@@ -42,9 +42,9 @@ real*8 function f2 (k0, e, r, temp)
 end function f2
 
 real*8 function f30 (bg, nc, phi)
-      !bg: stoichiometric coefficient to fully convert CH4 into CO2
-      !nc: efficiency of combustion
-      !phi: ratio of oxygen-carrier to fuel
+      !bg: stoichiometric coefficient to fully convert CH4 into CO2 (-)
+      !nc: efficiency of combustion (%)
+      !phi: ratio of oxygen-carrier to fuel (-)
 
       implicit none
 
@@ -55,8 +55,8 @@ real*8 function f30 (bg, nc, phi)
 end function f30
 
 real*8 function f27 (tmr, t)
-      !tmr: mean residence time of particle in the whole fluidized bed reactor
-      !t: time
+      !tmr: mean residence time of particle in the whole fluidized bed reactor (s)
+      !t: time (s)
 
       implicit none
 
@@ -67,9 +67,9 @@ real*8 function f27 (tmr, t)
 end function f27
 
 real*8 function f28 (xsin, tm, t)
-      !xsin: mean convertion of particles in
-      !tm: mean reacting time
-      !t: time
+      !xsin: mean convertion of particles in (%)
+      !tm: mean reacting time (s)
+      !t: time (s)
 
       implicit none
 
@@ -80,17 +80,18 @@ real*8 function f28 (xsin, tm, t)
 end function f28
 
 real*8 function f29 (xsout, tm, tmr, t, xsin)
-      !xsout: mean convertion of particles going out
-      !tm: mean reacting time
-      !tmr: mean residence time of particle in the whole fluidized bed reactor
-      !t: time
-      !xsin: mean convertion of particles going in
+      !xsout: mean convertion of particles going out (%)
+      !tm: mean reacting time (s)
+      !tmr: mean residence time of particle in the whole fluidized bed reactor (s)
+      !t: time (s)
+      !xsin: mean convertion of particles going in (%)
 
       implicit none
 
       real*8 :: xsout, tm, tmr, t, xsin, f27, f28
 
       f29 = (1.0 - f28 (xsin, tm, t)) * f27 (tmr, t)
+
 end function f29
 
 real*8 function f29_i (xsout, tm, tmr, xsin)
@@ -119,5 +120,147 @@ real*8 function f29_i (xsout, tm, tmr, xsin)
 
       f29_i = sol
 
-
 end function f29_i
+
+real*8 function f8 (umf, uvis, utf, sigb)
+      !umf: velocity of minimum fluidization (m/s)
+      !uvis: visible velocity of bubble (m/s)
+      !utf: velocity of the gas throughflow (m/s)
+      !sigb: fraction of bubble in the dense bed (-)
+
+      implicit none
+
+      real*8 :: umf, uvis, utf, sigb
+
+      f8 = (1.0 - sigb) * umf + uvis + utf
+
+end function f8
+
+real*8 function f9_1 (c1, c2, ar)
+      !c1, c2, c3: constans for reynolds calculation (-)
+      !ar: arrhenius number (-)
+
+      implicit none
+
+      real*8 :: c1, c2, ar
+
+      f9_1 = sqrt(c1**2.0 + c2 * ar) - c1
+
+end function f8
+
+real*8 function f9_2 (rhog, mdp, mug, re)
+      !umf: velocity of minimum fluidization (m/s)
+      !rhog: gas density (kg/m3)
+      !mdp: mean particle diameter (m)
+      !mug: fluidizing gas viscosity (kg/m s)
+
+      implicit none
+
+      real*8 :: rhog, mdp, mug, re
+
+      f9_2 = re * mug / (rhog * mdp)
+
+end function f9_2
+
+real*8 function f10 (psi, u0, umf, sigb)
+      !umf: velocity of minimum fluidization (m/s)
+      !psi:ratio of the visible bubble flow to the total flow through the bubbles
+      !u0: velocity of the total gas flow
+      !sigb: fraction of bubble in the dense bed (-)
+
+      implicit none
+
+      real*8 :: psi, u0, umf, sigb
+
+      f10 = psi * (u0 - umf * (1.0 - sigb))
+
+end function f10
+
+real*8 function f11 (psi, u0, umf, sigb)
+      !umf: velocity of minimum fluidization (m/s)
+      !psi:ratio of the visible bubble flow to the total flow through the bubbles
+      !u0: velocity of the total gas flow
+      !sigb: fraction of bubble in the dense bed (-)
+
+      implicit none
+
+      real*8 :: psi, u0, umf, sigb
+
+      f11 = (1.0 - psi) * (u0 - umf * (1.0 - sigb))
+
+end function f11
+
+real*8 function f12 (fb, h, a0)
+      !fb: empirical function (eq 13)
+      !h: height
+      !a0: area of the gas-distributor per nozzle, m2 per nozzle
+
+      implicit none
+
+      real*8 :: fb, h, a0
+
+      f12 = fb * (h + 4.0 * sqrt(a0))**0.4
+
+end function f12
+
+real*8 function f13 (dp, u0, umf)
+      !dp: diameter of particle (m/s)
+      !umf: velocity of minimum fluidization (m/s)
+      !u0: velocity of the total gas flow
+
+      implicit none
+
+      real*8 :: dp, u0, umf
+
+      f13 = (0.26 + 0.7 * exp(-3300.0 * dp)) / (0.15 + u0 - umf)**(1.0/3.0)
+
+end function f13
+
+real*8 function f14 (uvis, ubinf)
+      !uvis: visible velocity of bubble (m/s)
+      !ubinf: velocity of a single bubble (m/s)
+
+      implicit none
+
+      real*8 :: uvis, ubinf
+
+      f14 = uvis / (uvis + ubinf)
+
+end function f14
+
+real*8 function f15 (g, db)
+      !g: gravity acceleration (m/s2)
+      !db: diameter of bubble (m)
+
+      implicit none
+
+      real*8 :: g, db
+
+      f15 = 0.71 * sqrt(g * db)
+
+end function f15
+
+real*8 function f16 (sigb, emf)
+      !sigb: fraction of bubble in the dense bed (-)
+      !emf: porosity at minimum fluidization (-)
+
+      implicit none
+
+      real*8 :: sigb, emf
+
+      f16 = (1.0 - sigb) * emf + sigb
+
+end function f16
+
+real*8 function f17 (ar, rhog, rhos)
+      !ar: arrhenius number (-)
+      !rhog: gas density (kg/m3)
+      !rhos:density of solid (kg/m3)
+
+      implicit none
+
+      real*8 :: ar, rhog, rhos
+
+      f17 = 0.58 * ar**(-0.029) * (rhog / rhos)**0.021
+
+end function f17
