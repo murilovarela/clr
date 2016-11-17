@@ -1,7 +1,6 @@
 !determination of kinetic parameters
 !by: Murilo Varela
 
-
 subroutine kinetic_parameters (k0, e, r, t, rg, b, vm, c, n, temp, xs, ti)
       implicit none
       real*8 :: k0, e, r, t, rg, b, vm, c, n, i, temp

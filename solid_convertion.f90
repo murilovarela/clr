@@ -28,12 +28,12 @@ subroutine mean_react_time (xsout, tm, tmr, xsin)
             real*8 :: f29_i, e, es, tm
             real*8 :: sol, sol_
 
-            integer :: n, i
+            integer :: n
 
             n = 0
-            tm = e            !14.733253138492049       1 473 325 263
             e = 1.0e-14
             es = 1.0e-1
+            tm = e            !14.733253138492049       1 473 325 263
 
             do while (abs(f29_i (xsout, tm, tmr, xsin) - (1.0 - xsout)) > e)
 

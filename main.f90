@@ -2,6 +2,7 @@
 !by: Murilo Varela
 include 'kinetic_parameters.f90'
 include 'solid_convertion.f90'
+include 'fluid_dynamics.f90'
 include 'functions.f90'
 
 program main
@@ -13,6 +14,10 @@ program main
       !step 2
       real*8 :: rtd, tmr
       real*8 :: xsin, xsout, tm
+      !step 3
+      real*8 :: c1, c2, ar, rhog, mdp, mug, umf
+      real*8 :: u, g, h, a0, ubinf
+      real*8 :: dp, u0, sigb
 
 !step 0
 !determination of kinetic parameters
@@ -40,19 +45,38 @@ program main
 !step 2
 !     average solids convertion
 !           RTD curve, E(t) (eq 27)
-      tmr = ti
+      tmr = ti                !s
 
       call rtd_curve (tmr, t, rtd)
 
 !           solid convertion distribution (eq 28,29)
-      xsin = 0.0
-      xsout = xs1 - xsin
+      xsin = 0.0              !%
+      xsout = xs1 - xsin      !%
       call mean_react_time (xsout, tm, tmr, xsin)
-      print*, tm
+
 !step 3
 !     reactor model
 !           fluid dynamics
 !                 dense bed (qe 8-17)
+      c1 = 27.2
+      c2 = 0.0408
+      ar = 1.0                !must find a way to find this value
+      rhog = 1.82              !must find a way to find this value
+      mdp = 200.0e-6          !must be checked
+      mug = 4.46e-6               !must find a way to find this value
+
+      u = 0.075                                 !0.075–0.15 m/s
+      a0 = (3.14/4.0) * (0.1**2.0)        !must be checked
+      g = 9.8                                   !m/s2
+      h = 0.5                             !value to vary
+
+      dp = 2.0e-7                            !must be checked
+
+      call velocity_min_fluidization (c1, c2, ar, rhog, mdp, mug, umf)
+      call visible_velocity_bubble (u, g, dp, umf, h, a0, u0, sigb, ubinf)
+      print*, u0, ubinf, sigb
+      !print*, u, umf, h, a0, g, ubinf
+      !print*, u0, sigb
 !                 freeboard (eq 18-19)
 !           mass balance (eq 23-26, 31)
 !step 4

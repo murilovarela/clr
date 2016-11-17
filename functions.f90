@@ -146,7 +146,7 @@ real*8 function f9_1 (c1, c2, ar)
 
       f9_1 = sqrt(c1**2.0 + c2 * ar) - c1
 
-end function f8
+end function f9_1
 
 real*8 function f9_2 (rhog, mdp, mug, re)
       !umf: velocity of minimum fluidization (m/s)
@@ -212,7 +212,7 @@ real*8 function f13 (dp, u0, umf)
 
       real*8 :: dp, u0, umf
 
-      f13 = (0.26 + 0.7 * exp(-3300.0 * dp)) / (0.15 + u0 - umf)**(1.0/3.0)
+      f13 = (0.26 + 0.7 * exp(-3300.0 * dp)) / ((0.15 + u0 - umf)**(1.0/3.0))
 
 end function f13
 
@@ -264,3 +264,18 @@ real*8 function f17 (ar, rhog, rhos)
       f17 = 0.58 * ar**(-0.029) * (rhog / rhos)**0.021
 
 end function f17
+
+real*8 function f36 (u, umf, h, a0, g)
+      !u: gas velocity
+      !umf: velocity of minimum fluidization (m/s)
+      !h: height
+      !a0: area of the gas-distributor per nozzle, m2 per nozzle
+      !!g: gravity acceleration (m/s2)
+
+      implicit none
+
+      real*8 :: u, umf, h, a0, g
+
+      f36 = 0.54 * ((u - umf)**0.4) * ((h + 4.0 * sqrt(a0))**0.8) * (g**(-0.2))
+      
+end function f36
