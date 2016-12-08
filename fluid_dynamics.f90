@@ -83,3 +83,17 @@ subroutine visible_velocity_bubble (u, g, dp, umf, h, a0, u0, sigb, ubinf)
       u0 = u0_
 
 end subroutine visible_velocity_bubble
+
+subroutine fluid_dynamics_in_freeboard (cs, z, csb, ug, dp)
+
+      implicit none
+
+      real*8 :: cs, a, z, csb
+      real*8 :: xi, dp, ug
+      real*8 :: f18, f42, f19
+
+      a = f42(dp, ug)
+      cs = f18(a, z)
+      xi = f19(cs, csb)
+
+end subroutine fluid_dynamics_in_freeboard

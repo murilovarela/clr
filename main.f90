@@ -1,5 +1,8 @@
 !combustion looping reactor
 !by: Murilo Varela
+
+!https://drive.google.com/file/d/0B6-bRnYhK1rBdWNwd0NGNU5VcWs/view?usp=sharing
+
 include 'kinetic_parameters.f90'
 include 'solid_convertion.f90'
 include 'fluid_dynamics.f90'
@@ -18,6 +21,7 @@ program main
       real*8 :: c1, c2, ar, rhog, mdp, mug, umf
       real*8 :: u, g, h, a0, ubinf
       real*8 :: dp, u0, sigb
+      real*8 :: cs, z, csb, ug
 
 !step 0
 !determination of kinetic parameters
@@ -68,17 +72,22 @@ program main
       u = 0.075                                 !0.075–0.15 m/s
       a0 = (3.14/4.0) * (0.1**2.0)        !must be checked
       g = 9.8                                   !m/s2
-      h = 0.5                             !value to vary
+      h = 1.2                             !value to vary
 
       dp = 2.0e-7                            !must be checked
 
       call velocity_min_fluidization (c1, c2, ar, rhog, mdp, mug, umf)
       call visible_velocity_bubble (u, g, dp, umf, h, a0, u0, sigb, ubinf)
-      print*, u0, ubinf, sigb
-      !print*, u, umf, h, a0, g, ubinf
-      !print*, u0, sigb
+
 !                 freeboard (eq 18-19)
+      csb = 1.0                           !must find out what it mean
+      z = 0.9
+      ug = u
+
+      call fluid_dynamics_in_freeboard (cs, z, csb, ug, dp)
+      print*, cs, z
 !           mass balance (eq 23-26, 31)
+
 !step 4
 !     solid convertion calculation (eq 30) Xs2
 !step 5

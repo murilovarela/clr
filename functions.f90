@@ -1,5 +1,6 @@
 !equation list file
 !by Murilo Varela
+
 real*8 function f1_1 (t, ti)
       !t: time (s)
       !ti: residence time (s)
@@ -270,12 +271,48 @@ real*8 function f36 (u, umf, h, a0, g)
       !umf: velocity of minimum fluidization (m/s)
       !h: height
       !a0: area of the gas-distributor per nozzle, m2 per nozzle
-      !!g: gravity acceleration (m/s2)
+      !g: gravity acceleration (m/s2)
 
       implicit none
 
       real*8 :: u, umf, h, a0, g
 
       f36 = 0.54 * ((u - umf)**0.4) * ((h + 4.0 * sqrt(a0))**0.8) * (g**(-0.2))
-      
+
 end function f36
+
+real*8 function f18 (a, z)
+      !a: decay factor (eq 42)
+      !z: height
+
+      implicit none
+
+      real*8 :: z, a
+
+      f18 = exp(-a * z)
+
+end function f18
+
+real*8 function f42 (dp, ug)
+      !dp: particle diameter
+      !ug: inlet gas velocity
+
+      implicit none
+
+      real*8 :: dp, ug
+
+      f42 = 315.0 * (dp**0.64) / ug
+
+end function f42
+
+real*8 function f19 (cs, csb)
+      !cs: solid concentration in the freeboard (eq 18)
+      !csb: solid concentration in the upper limit of the dense bed
+
+      implicit none
+
+      real*8 :: cs, csb
+
+      f19 = 1.0 - 0.75 * (cs / csb)**0.4
+
+end function f19
